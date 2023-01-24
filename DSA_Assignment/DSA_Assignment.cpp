@@ -10,17 +10,99 @@ string username, password, fname, usern, pw;
 ofstream outFile; // write file  
 ifstream inFile; // read file
 
+void CreatePost(string username)
+{
+    string topic, post;
+    cout << "Topic: " << endl;
+    cin.ignore();
+    getline(cin, topic);
+    cout << "Post: " << endl;
+    getline(cin, post);
+
+    outFile.open("Forum.txt", ios_base::app);
+    if (outFile.fail())
+    {
+        cout << "File does not exist." << endl;
+    }
+    else
+    {
+        outFile << " " << endl;
+        outFile << "Posted by: " << username << endl;
+        outFile << "Topic: " << topic << endl;
+        outFile << "Post: " << post << endl;
+        outFile.close();
+        cout << "Post created succesfully." << endl;
+    }
+}
+
+void LoadForum()
+{
+    string str;
+
+    cout << "\n---------------- Home -------------------" << endl;
+    inFile.open("Forum.txt");
+    if (inFile.fail())
+    {
+        cout << "File does not exist." << endl;
+    }
+    else
+    {
+        // read till end of file
+        while (!inFile.eof())
+        {
+            getline(inFile, str);
+            cout << str << endl;
+        }
+        inFile.close();
+    }
+}
+
+void MainMenu(string username)
+{
+    int option;
+    do
+    {
+        cout << "\n---------------- Welcome to C++ Forum -------------------" << endl;
+        cout << "Choose one option: \n[1] Create a post \n[2] Home" << endl;
+        cin >> option;
+
+        // create post
+        if (option == 1)
+        {
+            CreatePost(username);
+        }
+        // load topic with posts
+        else if (option == 2)
+        {
+            LoadForum();
+        }
+    } while (option != 0);
+}
+
 void Register() {
     cout << "Create a username: ";
     cin >> username;
     cout << "Create a password: ";
     cin >> password;
     fname = username + ".txt";
-    outFile.open(fname);
-    outFile << username << endl << password << endl;
-    cout << "You are successfully registered!" << endl;
-    outFile.close();
-    cout << endl;
+
+    inFile.open(fname);
+    getline(inFile, usern);
+
+    // if there is an account with same username
+    if (username == usern)
+    {
+        cout << "There is already an existing account with that username. Please try again." << endl;
+        inFile.close();
+    }
+    // registration successful
+    else {
+        outFile.open(fname);
+        outFile << username << endl << password << endl;
+        cout << "You are successfully registered!" << endl;
+        outFile.close();
+        cout << endl;
+    }
 }
 
 bool LogIn() {
@@ -35,48 +117,28 @@ bool LogIn() {
     if (!inFile.is_open() && inFile.fail())
     {
         cout << "There is no existing account with that username. Please register an account before logging in." << endl;
-        inFile.close();
+        inFile.close();   
         return false;
     }
 
-    getline(inFile, usern, '\n');
-    getline(inFile, pw, '\n');
+    getline(inFile, usern);
+    getline(inFile, pw);
 
-    // username and password does not match
-    if (username != usern && password != pw)
-    {
-        cout << "Invalid username or password! \nPlease try again!" << endl;
-    }
     // username and password matches
-    else
-    {
+    if (username == usern && password == pw)
+    {       
         cout << "Log in successful!" << endl;
         cout << "Welcome, " << username << endl;
         inFile.close();
+        MainMenu(username);
         return true;
     }
-    cout << endl;
-}
-
-void LoadForum() 
-{
-    string str;
-
-    cout <<"\n---------------- Welcome to C++ Forum -------------------" << endl;
-    inFile.open("Forum.txt");
-    if (inFile.fail()) 
-    {
-        cout << "File does not exist." << endl;
-    }
+    // username and password does not match
     else
     {
-        while (!inFile.eof())
-        {
-            getline(inFile, str);
-            cout << str << endl;
-        }
-        inFile.close();
+        cout << "Invalid username or password! \nPlease try again!" << endl;
     }
+    cout << endl;
 }
 
 int main()
@@ -89,25 +151,23 @@ int main()
     do
     {
         cout << "---------------- C++ Forum -------------------" << endl;
-        cout << "Choose one option: \n[1] Register \n[2] Log in \n"<< endl;
+        cout << "Choose one option: \n[1] Register \n[2] Log in" << endl;
         cin >> option;
 
         // register 
         if (option == 1) 
         {      
-            Register();
-            option = 0;
+            Register();        
         }
 
         // log in
         else if (option == 2) 
         {
-            // read forum file and print
+            // stop displaying menu if log in is successful
             if (LogIn() == true) 
-            {
-                option = 0;
-                LoadForum();
-            }
+            {             
+                option = 0; 
+            }       
         }   
 
     } while (option != 0);  
