@@ -13,10 +13,10 @@ ifstream inFile; // read file
 void CreatePost(string username)
 {
     string topic, post;
-    cout << "Topic: " << endl;
+    cout << "Topic: ";
     cin.ignore();
     getline(cin, topic);
-    cout << "Post: " << endl;
+    cout << "Post: ";
     getline(cin, post);
 
     outFile.open("Forum.txt", ios_base::app);
@@ -63,7 +63,7 @@ void MainMenu(string username)
     do
     {
         cout << "\n---------------- Welcome to C++ Forum -------------------" << endl;
-        cout << "Choose one option: \n[1] Create a post \n[2] Home" << endl;
+        cout << "Choose one option: \n[1] Create a post \n[2] Home" << endl << "Choice: ";
         cin >> option;
 
         // create post
@@ -151,7 +151,7 @@ int main()
     do
     {
         cout << "---------------- C++ Forum -------------------" << endl;
-        cout << "Choose one option: \n[1] Register \n[2] Log in" << endl;
+        cout << "Choose one option: \n[1] Register \n[2] Log in" << endl << "Choice: ";
         cin >> option;
 
         // register 
@@ -170,6 +170,8 @@ int main()
             }       
         }   
 
-    } while (option != 0);  
+    } 
+
+    while (option != 0);  
 }
 
