@@ -84,18 +84,39 @@ void Register() {
     cin >> username;
     cout << "Create a password: ";
     cin >> password;
-    fname = username + ".txt";
+    fname = "username.txt";
 
     inFile.open(fname);
-    getline(inFile, usern);
+
+    while (!inFile.eof()) {
+        getline(inFile, usern);
+        if (username == usern) {
+            cout << "There is already an existing account with that username. Please try again." << endl;
+            inFile.close();
+        }
+    }
+
+    outFile.open(fname);
+    outFile << username << endl;
+    outFile.close();
+    outFile.open("password.txt");
+    outFile << password << endl;
+    outFile.close();
+    cout << "Your registration was successful!\n";
+
 
     // if there is an account with same username
+    /*
     if (username == usern)
     {
         cout << "There is already an existing account with that username. Please try again." << endl;
         inFile.close();
     }
+    */
+
+
     // registration successful
+    /*
     else {
         outFile.open(fname);
         outFile << username << endl << password << endl;
@@ -103,6 +124,7 @@ void Register() {
         outFile.close();
         cout << endl;
     }
+    */
 }
 
 bool LogIn() {
@@ -110,6 +132,8 @@ bool LogIn() {
     cin >> username;
     cout << "Enter your password: ";
     cin >> password;
+
+    /*
     fname = username + ".txt";
     inFile.open(fname);
 
@@ -139,6 +163,34 @@ bool LogIn() {
         cout << "Invalid username or password! \nPlease try again!" << endl;
     }
     cout << endl;
+    */
+    int line;
+    inFile.open("username.txt");
+    while (!inFile.eof())
+    {
+
+        getline(inFile, usern);
+        if (username != usern)
+        {
+            line++;
+            inFile.close();
+        }
+    }
+
+    inFile.open("password.txt");
+    for (int i = 0; i <= line; i++)
+    {
+        getline(inFile, pw);
+        if (password == pw)
+        {
+            cout << "Log in successful!" << endl;
+            inFile.close();
+        }
+		else
+		{
+			cout << "Invalid username or password! \nPlease try again!" << endl;
+		}
+    }
 }
 
 int main()
