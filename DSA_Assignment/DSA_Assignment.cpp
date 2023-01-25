@@ -63,7 +63,7 @@ void MainMenu(string username)
     do
     {
         cout << "\n---------------- Welcome to C++ Forum -------------------" << endl;
-        cout << "Choose one option: \n[1] Create a post \n[2] Home" << endl << "Choice: ";
+        cout << "Choose one option: \n[1] Create a post \n[2] Home \n[3] Log out" << endl << "Choice: ";
         cin >> option;
 
         // create post
@@ -76,10 +76,16 @@ void MainMenu(string username)
         {
             LoadForum();
         }
+
+        else if (option == 3) {
+            return;
+        }
     } while (option != 0);
 }
 
 void Register() {
+
+    bool notExists = true;
     cout << "Create a username: ";
     cin >> username;
     cout << "Create a password: ";
@@ -91,19 +97,31 @@ void Register() {
     while (!inFile.eof()) {
         getline(inFile, usern);
         if (username == usern) {
-            cout << "There is already an existing account with that username. Please try again." << endl;
-            inFile.close();
+            notExists = false;
         }
     }
 
-    outFile.open(fname);
-    outFile << username << endl;
-    outFile.close();
-    outFile.open("password.txt");
-    outFile << password << endl;
-    outFile.close();
-    cout << "Your registration was successful!\n";
+    if (!notExists) {
 
+        cout << "There is already an existing account with that username. Please try again." << endl;
+
+    }
+
+    inFile.close();
+
+    if (notExists) {
+
+        outFile.open(fname, ios_base::app);
+        outFile << username << endl;
+        outFile.close();
+
+        outFile.open("password.txt", ios_base::app);
+        outFile << password << endl;
+        outFile.close();
+
+        cout << "Your registration was successful!\n";
+    }
+   
 
     // if there is an account with same username
     /*
@@ -128,6 +146,8 @@ void Register() {
 }
 
 bool LogIn() {
+
+    bool login = false;
     cout << "Enter your username: ";
     cin >> username;
     cout << "Enter your password: ";
@@ -164,7 +184,8 @@ bool LogIn() {
     }
     cout << endl;
     */
-    int line;
+
+    int line = 0;
     inFile.open("username.txt");
     while (!inFile.eof())
     {
@@ -173,24 +194,37 @@ bool LogIn() {
         if (username != usern)
         {
             line++;
+        }
+
+        else {
             inFile.close();
         }
     }
 
     inFile.open("password.txt");
-    for (int i = 0; i <= line; i++)
+    for (int i = 0; i < line; i++)
     {
         getline(inFile, pw);
         if (password == pw)
         {
             cout << "Log in successful!" << endl;
             inFile.close();
+            MainMenu(username);
+            login = true;
+            return true;
         }
-		else
-		{
-			cout << "Invalid username or password! \nPlease try again!" << endl;
-		}
+
     }
+
+    if (login) {
+
+        cout << "Invalid username or password! \nPlease try again!" << endl;
+    
+    }
+
+
+    return false;
+
 }
 
 int main()
