@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <list>
 #include "User.h"
 using namespace std;
 
@@ -8,17 +9,20 @@ private:
 	string topic;
 	User user;
 	string text;
+	list<string> commentList;
 
 public:
-	Post(string topic, string text);
+	Post(string topic, User user, string text, list<string> commentList);
 
-	void createPost(string topic, User user, string text) 
-	{
+	Post() = default;
+	
+	string getTopic();
+	
+	string getUsername();
+	
+	string getText();
+	
+	list<string> getComment();
 
-	}
-
-	void deletePost()
-	{
-
-	}
 };
+

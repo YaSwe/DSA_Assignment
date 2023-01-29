@@ -2,6 +2,8 @@
 #include <string>
 #include <fstream>
 #include "User.h"
+#include "Post.h"
+#include "List.h"
 
 using namespace std;
 
@@ -9,15 +11,24 @@ int option;
 string username, password, fname, usern, pw;
 ofstream outFile; // write file  
 ifstream inFile; // read file
+List postList;
 
 void CreatePost(string username)
 {
     string topic, post;
+    list<string> commentList;
+
     cout << "Topic: ";
     cin.ignore();
     getline(cin, topic);
     cout << "Post: ";
     getline(cin, post);
+
+    User user(username, "123"); // for testing
+    // create new post object
+    Post p(topic, user, post, commentList);
+    // add post into post list
+    postList.add(p);
 
     outFile.open("Forum.txt", ios_base::app);
     if (outFile.fail())
@@ -31,8 +42,10 @@ void CreatePost(string username)
         outFile << "Topic: " << topic << endl;
         outFile << "Post: " << post << endl;
         outFile.close();
-        cout << "Post created succesfully." << endl;
+        cout << "\nPost created succesfully." << endl;
     }
+    // write to their respective account file
+    postList.writeFile(username);
 }
 
 void LoadForum()
@@ -54,7 +67,33 @@ void LoadForum()
             cout << str << endl;
         }
         inFile.close();
+    } 
+}
+
+void MyPosts(string username)
+{
+    string str;
+
+    cout << "Welcome, " << username << endl;
+    cout << "\n---------------- Posts -------------------" << endl;
+    fname = username + ".txt";
+    inFile.open(fname);
+    if (inFile.fail())
+    {
+        cout << "File does not exist." << endl;
     }
+    else
+    {
+        // read till end of file
+        while (!inFile.eof())
+        {
+            getline(inFile, str);
+            cout << str << endl;
+        }
+        inFile.close();
+    }
+    
+    
 }
 
 void MainMenu(string username)
@@ -63,7 +102,7 @@ void MainMenu(string username)
     do
     {
         cout << "\n---------------- Welcome to C++ Forum -------------------" << endl;
-        cout << "Choose one option: \n[1] Create a post \n[2] Home \n[3] Log out" << endl << "Choice: ";
+        cout << "Choose one option: \n[1] Create a post \n[2] Home \n[3] My Posts\n[4] Log out" << endl << "Choice: ";
         cin >> option;
 
         // create post
@@ -76,8 +115,14 @@ void MainMenu(string username)
         {
             LoadForum();
         }
-
-        else if (option == 3) {
+        // view own posts
+        else if (option == 3)
+        {
+            MyPosts(username);
+        }
+        // log out
+        else if (option == 4) 
+        {
             return;
         }
     } while (option != 0);
@@ -90,10 +135,8 @@ void Register() {
     cin >> username;
     cout << "Create a password: ";
     cin >> password;
-    fname = "username.txt";
 
-    inFile.open(fname);
-
+    inFile.open("username.txt");
     while (!inFile.eof()) {
         getline(inFile, usern);
         if (username == usern) {
@@ -101,14 +144,15 @@ void Register() {
         }
     }
 
+    // if account with username exist
     if (!notExists) {
-
         cout << "There is already an existing account with that username. Please try again." << endl;
-
+        cout << endl;
     }
 
     inFile.close();
 
+    // if account with username does not exist
     if (notExists) {
 
         outFile.open(fname, ios_base::app);
@@ -148,7 +192,7 @@ void Register() {
 bool LogIn() {
 
     bool login = false;
-    cout << "Enter your username: ";
+    cout << "\nEnter your username: ";
     cin >> username;
     cout << "Enter your password: ";
     cin >> password;
@@ -216,23 +260,21 @@ bool LogIn() {
 
     }
 
-    if (login) {
+    if (login == false) {
 
-        cout << "Invalid username or password! \nPlease try again!" << endl;
-    
+        cout << "\nInvalid username or password! \nPlease try again!\n" << endl;
     }
-
-
     return false;
-
 }
 
 int main()
 {
+    /*
     int option;
     string username, password, fname, usern, pw;
     ofstream outFile; // write file  
     ifstream inFile; // read file 
+    */
 
     do
     {
@@ -255,9 +297,7 @@ int main()
                 option = 0; 
             }       
         }   
-
     } 
-
     while (option != 0);  
 }
 
