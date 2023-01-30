@@ -9,13 +9,14 @@ using namespace std;
 
 int option;
 string username, password, fname, usern, pw;
+User user;
 ofstream outFile; // write file  
 ifstream inFile; // read file
 List postList;
 
-void CreatePost(string username)
+void CreatePost(User user)
 {
-    string topic, post;
+    string topic, post, comment;
     list<string> commentList;
 
     cout << "Topic: ";
@@ -24,23 +25,28 @@ void CreatePost(string username)
     cout << "Post: ";
     getline(cin, post);
 
-    User user(username, "123"); // for testing
     // create new post object
     Post p(topic, user, post, commentList);
     // add post into post list
     postList.add(p);
 
-    outFile.open("Forum.txt", ios_base::app);
+    outFile.open("forumdata.txt", ios_base::app);
     if (outFile.fail())
     {
         cout << "File does not exist." << endl;
     }
     else
     {
-        outFile << " " << endl;
-        outFile << "Posted by: " << username << endl;
-        outFile << "Topic: " << topic << endl;
-        outFile << "Post: " << post << endl;
+        outFile << username << endl;
+        outFile << topic << endl;
+        outFile << post << endl;
+
+        for (const auto& word : commentList)
+        {
+            comment += word;
+        }
+
+        outFile << comment << endl;
         outFile.close();
         cout << "\nPost created succesfully." << endl;
     }
@@ -48,27 +54,38 @@ void CreatePost(string username)
     postList.writeFile(username);
 }
 
-void LoadForum()
+// read from text file and get list data
+void readForum(User user)
 {
-    string str;
+	string topic, username, text;
+	list<string> commentList;
 
-    cout << "\n---------------- Home -------------------" << endl;
-    inFile.open("Forum.txt");
-    if (inFile.fail())
-    {
-        cout << "File does not exist." << endl;
-    }
-    else
-    {
-        // read till end of file
-        while (!inFile.eof())
-        {
-            getline(inFile, str);
-            cout << str << endl;
-        }
-        inFile.close();
-    } 
+	inFile.open("forumdata.txt");
+	if (inFile.fail())
+	{
+		cout << "File does not exist." << endl;
+	}
+	else
+	{
+		while (!inFile.eof())
+		{
+			getline(inFile, username);
+			getline(inFile, topic);
+			getline(inFile, text);
+			Post p(topic, user, text, commentList);
+			postList.add(p);
+		}
+
+		inFile.close();
+	}
 }
+
+void LoadForum(User user)
+{
+	readForum(user);
+	postList.print();
+}
+
 
 void MyPosts(string username)
 {
@@ -96,7 +113,7 @@ void MyPosts(string username)
     
 }
 
-void MainMenu(string username)
+void MainMenu(User user)
 {
     int option;
     do
@@ -108,17 +125,17 @@ void MainMenu(string username)
         // create post
         if (option == 1)
         {
-            CreatePost(username);
+            CreatePost(user);
         }
         // load topic with posts
         else if (option == 2)
         {
-            LoadForum();
+            LoadForum(user);
         }
         // view own posts
         else if (option == 3)
         {
-            MyPosts(username);
+            //MyPosts(username);
         }
         // log out
         else if (option == 4) 
@@ -253,7 +270,8 @@ bool LogIn() {
         {
             cout << "Log in successful!" << endl;
             inFile.close();
-            MainMenu(username);
+            User user(username, password);
+            MainMenu(user);
             login = true;
             return true;
         }
@@ -269,6 +287,7 @@ bool LogIn() {
 
 int main()
 {
+
     /*
     int option;
     string username, password, fname, usern, pw;

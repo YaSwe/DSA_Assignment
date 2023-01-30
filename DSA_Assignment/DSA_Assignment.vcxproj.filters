@@ -43,5 +43,6 @@
     <Text Include="Forum.txt" />
     <Text Include="password.txt" />
     <Text Include="username.txt" />
+    <Text Include="forumdata.txt" />
   </ItemGroup>
 </Project>
