@@ -35,6 +35,10 @@ public:
 
 	void print();
 
-	void writeFile(string username);
+	void accPrint(User user);
+
+	void writeFile();
+
+	void readFile(List List);
 };
 

@@ -17,12 +17,20 @@ public:
 	Post() = default;
 	
 	string getTopic();
+
+	void setTopic(string newTopic);
 	
 	string getUsername();
 	
+	void setUserName(string newUsername);
+
 	string getText();
 	
+	void setText(string newText);
+
 	list<string> getComment();
+
+	void setComment(list<string> newCommentList);
 
 };
 

@@ -138,8 +138,8 @@
     <ClInclude Include="User.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Forum.txt" />
     <Text Include="forumdata.txt" />
+    <Text Include="forumposts.txt" />
     <Text Include="password.txt" />
     <Text Include="username.txt" />
   </ItemGroup>

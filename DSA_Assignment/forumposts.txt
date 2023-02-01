@@ -10,7 +10,4 @@ test
 test
 test
 test
-yaswe
-Array
-How do I iterate through an array?
 

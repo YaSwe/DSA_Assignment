@@ -1,5 +1,6 @@
 #include "List.h"	
 #include <fstream>
+#include <string>
    
 List::List() { size = 0; firstNode = NULL; }
 List::~List() 
@@ -125,21 +126,43 @@ void List::print()
 	{
 		while (temp != NULL)
 		{
+			cout << "\nPosted by: " << temp->item.getUsername() << endl;
 			cout << "Topic: " << temp->item.getTopic() << endl;
 			cout << "Text: " << temp->item.getText() << endl;
-			cout << endl;
+			cout << "Comments: " << endl;
 			temp = temp->next;		
 		}
 	}
 }
 
-void List::writeFile(string username)
+void List::accPrint(User user)
+{
+	Node* temp = firstNode;
+
+	if (temp == NULL)
+		cout << "The list is empty." << endl;
+	else
+	{
+		while (temp != NULL)
+		{
+			if (temp->item.getUsername() == user.getName())
+			{
+				cout << "\nPosted by: " << temp->item.getUsername() << endl;
+				cout << "Topic: " << temp->item.getTopic() << endl;
+				cout << "Text: " << temp->item.getText() << endl;
+				cout << "Comments: " << endl;
+			}
+			temp = temp->next;
+		}
+	}
+}
+
+void List::writeFile()
 {
 	Node* temp = firstNode;
 
 	ofstream outFile;
-	string fname = username + ".txt";
-	outFile.open(fname, ios_base::app);
+	outFile.open("forumdata.txt", ios_base::trunc);
 
 	if (temp == NULL)
 	{
@@ -148,17 +171,16 @@ void List::writeFile(string username)
 	else
 	{
 		while (temp != NULL)
-		{
-			if (temp->item.getUsername() == username)
-			{
-				outFile << "Posted by: " << username << endl;
-				outFile << "Topic: " << temp->item.getTopic() << endl;
-				outFile << "Post: " << temp->item.getText() << endl;
-				cout << endl;
-			}
+		{		
+			outFile << temp->item.getUsername() << endl;
+			outFile << temp->item.getTopic() << endl;
+			outFile << temp->item.getText() << endl;
+			outFile << "Comment" << endl;		
 			temp = temp->next;
 		}
 		outFile.close();
 	}
 }
+
+
 
