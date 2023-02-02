@@ -3,7 +3,8 @@
 #include <fstream>
 #include "User.h"
 #include "Post.h"
-#include "List.h"
+#include "PostList.h"
+#include "TopicList.h"
 
 using namespace std;
 
@@ -12,14 +13,18 @@ string username, password, fname, usern, pw;
 User user;
 ofstream outFile; // write file  
 ifstream inFile; // read file
-List postList;
-List accList;
+
+TopicList topicList;
+PostList postList;
+PostList accList;
 
 void CreatePost(User user)
 {
     string topic, post, comment;
     list<string> commentList;
 
+    cout << "\nWelcome, " << user.getName() << endl;
+    cout << "---------------- Create a post -------------------" << endl;
     cout << "Topic: ";
     cin.ignore();
     getline(cin, topic);
@@ -59,6 +64,7 @@ void readForum(User user)
     string topic, username, text, comment, str;
 	list<string> commentList;
 
+    // load the forum data
 	inFile.open("forumdata.txt");
 	if (inFile.fail())
 	{
@@ -74,6 +80,21 @@ void readForum(User user)
 		}
 		inFile.close();
 	}
+
+    // load the topic data
+    inFile.open("topicdata.txt");
+    if (inFile.fail())
+    {
+        cout << "File does not exist." << endl;
+    }
+    else
+    {
+        while (getline(inFile, topic))
+        {
+            topicList.add(topic);
+        }
+        inFile.close();
+    }
 }
 
 // read from text file and get list data for own posts
@@ -102,11 +123,56 @@ void readForumAcc(User user)
     }
 }
 
+void CreateTopic(User user)
+{
+    string topic;
+    cout << "\nWelcome, " << user.getName() << endl;
+    cout << "---------------- Create a topic -------------------" << endl;
+    cout << "Enter a C++ topic: ";
+    cin >> topic;
+
+    outFile.open("topicdata.txt", ios_base::app);
+    if (outFile.fail())
+    {
+        cout << "File does not exist." << endl;
+    }
+    else
+    {
+        outFile << topic << endl;
+        outFile.close();
+        cout << "\nTopic created succesfully." << endl;
+    }
+}
+
 void LoadForum(User user)
 {
-	postList.print();
-    cout << postList.getLength();
-    
+    string topicInput;
+    char option;
+
+    cout << "\n----------- Topics --------------" << endl;
+
+    if (topicList.getLength() < 1)
+    {
+        cout << "\nNo topics are found. Create one? [Y/N]" << endl;
+        cin >> option;
+        if (option == 'Y')
+        {
+            CreateTopic(user);
+        }
+        else if (option == 'N')
+        {
+            LoadForum(user);
+        }
+    }
+    else
+    {
+        topicList.print();
+        cout << "\nSelect topic: ";
+        cin >> topicInput;
+
+        cout << "\n---------------- " << topicInput << " Posts -------------------" << endl;
+        postList.print(topicInput);
+    }
 }
 
 void MyPosts(User user)
@@ -127,7 +193,7 @@ void MainMenu(User user)
     do
     {
         cout << "\n---------------- Welcome to C++ Forum -------------------" << endl;
-        cout << "Choose one option: \n[1] Create a post \n[2] Home \n[3] My Posts\n[4] Log out" << endl << "Choice: ";
+        cout << "Choose one option: \n[1] Create a post \n[2] Create a topic \n[3] Home \n[4] My Posts\n[5] Log out" << endl << "Choice: ";
         cin >> option;
 
         // create post
@@ -135,18 +201,22 @@ void MainMenu(User user)
         {
             CreatePost(user);
         }
-        // load topic with posts
         else if (option == 2)
+        {
+            CreateTopic(user);
+        }
+        // load topic with all posts
+        else if (option == 3)
         {
             LoadForum(user);
         }
         // view own posts
-        else if (option == 3)
+        else if (option == 4)
         {
             MyPosts(user);
         }
         // log out
-        else if (option == 4) 
+        else if (option == 5) 
         {
             return;
         }
@@ -222,7 +292,7 @@ bool LogIn() {
         getline(inFile, pw);
         if (password == pw)
         {
-            cout << "Log in successful!" << endl;
+            cout << "\nLog in successful!" << endl;
             inFile.close();
             User user(username, password);
             MainMenu(user);

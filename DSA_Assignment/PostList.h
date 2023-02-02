@@ -5,7 +5,7 @@ using namespace std;
 
 typedef Post ItemType;
 
-class List
+class PostList
 {
 public:
 	struct Node
@@ -17,9 +17,9 @@ public:
 	Node* firstNode;	
 	int  size;
 
-	List();
+	PostList();
 
-	~List();
+	~PostList();
 
 	bool add(ItemType item);
 
@@ -33,12 +33,11 @@ public:
 
 	int getLength();
 
-	void print();
+	void print(string topicInput);
 
 	void accPrint(User user);
 
 	void writeFile();
 
-	void readFile(List List);
 };
 

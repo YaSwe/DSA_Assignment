@@ -1,9 +1,9 @@
-#include "List.h"	
+#include "PostList.h"	
 #include <fstream>
 #include <string>
    
-List::List() { size = 0; firstNode = NULL; }
-List::~List() 
+PostList::PostList() { size = 0; firstNode = NULL; }
+PostList::~PostList() 
 {
 	Node* currNode = firstNode;
 	while (currNode != NULL) 
@@ -16,7 +16,7 @@ List::~List()
 	firstNode = NULL;
 }
 
-bool List::add(ItemType newItem)
+bool PostList::add(ItemType newItem)
 {
 	Node* newNode = new Node;
 	newNode->item = newItem;
@@ -37,7 +37,7 @@ bool List::add(ItemType newItem)
 	return true;  
 }
 
-bool List::add(int index, ItemType item)
+bool PostList::add(int index, ItemType item)
 {
 	bool success = (index >= 0) && (index <= size);
 
@@ -63,7 +63,7 @@ bool List::add(int index, ItemType item)
 	return success;
 }
 
-void List::remove(int index)
+void PostList::remove(int index)
 {
 	bool success = (index >= 0) && (index <= size - 1) && (size != 0);
 	if (success)
@@ -89,7 +89,7 @@ void List::remove(int index)
 	}
 }
 
-ItemType List::get(int index)
+ItemType PostList::get(int index)
 {
 	ItemType dataItem;
 	bool success = (index >= 0) && (index <= size - 1);
@@ -105,18 +105,18 @@ ItemType List::get(int index)
 	return dataItem;
 }
 
-bool List::isEmpty()
+bool PostList::isEmpty()
 {
 	return size == 0;
 }
 
-int List::getLength()
+int PostList::getLength()
 {
 	return size;
 }
 
 //------------------- Other useful functions -----------------
-void List::print()
+void PostList::print(string topicInput)
 {
 	Node* temp = firstNode;
 
@@ -126,16 +126,19 @@ void List::print()
 	{
 		while (temp != NULL)
 		{
-			cout << "\nPosted by: " << temp->item.getUsername() << endl;
-			cout << "Topic: " << temp->item.getTopic() << endl;
-			cout << "Text: " << temp->item.getText() << endl;
-			cout << "Comments: " << endl;
+			if (temp->item.getTopic() == topicInput)
+			{
+				cout << "\nPosted by: " << temp->item.getUsername() << endl;
+				cout << "Topic: " << temp->item.getTopic() << endl;
+				cout << "Text: " << temp->item.getText() << endl;
+				cout << "Comments: " << endl;
+			}
 			temp = temp->next;		
 		}
 	}
 }
 
-void List::accPrint(User user)
+void PostList::accPrint(User user)
 {
 	Node* temp = firstNode;
 
@@ -157,7 +160,7 @@ void List::accPrint(User user)
 	}
 }
 
-void List::writeFile()
+void PostList::writeFile()
 {
 	Node* temp = firstNode;
 

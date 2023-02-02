@@ -1,5 +1,5 @@
 #include "Post.h"
-#include "List.h"
+#include "PostList.h"
 
 Post::Post(string ptopic, User puser, string ptext, list<string> pcommentList)
 {
