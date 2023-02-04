@@ -146,20 +146,23 @@ string CommentList::CommentString() {
 void CommentList::print()
 {
 	Node* temp = firstNode;
-
+	int tempsize = size;
 	if (temp == NULL)
 		cout << "The list is empty." << endl;
 	else
 	{
 		while (temp != NULL)
 		{
-			if (size > 1) {
+			if (tempsize > 1) {
 				cout << temp->item << ", ";
+				tempsize--;
 				temp = temp->next;
+				
 			}
 
 			else {
 				cout << temp->item;
+				tempsize--;
 				temp = temp->next;
 			}
 

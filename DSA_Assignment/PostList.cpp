@@ -28,9 +28,10 @@ bool PostList::add(ItemType newItem)
 	else
 	{
 		Node* temp = firstNode;
+
 		while (temp->next != NULL)
-			temp = temp->next;		
-		temp->next = newNode;		
+			temp = temp->next;	
+		temp->next = newNode;
 	}
 
 	size++;
@@ -64,6 +65,7 @@ bool PostList::add(int index, ItemType item)
 	return success;
 }
 
+
 void PostList::remove(int index)
 {
 	bool success = (index >= 0) && (index <= size - 1) && (size != 0);
@@ -80,15 +82,61 @@ void PostList::remove(int index)
 			{
 				previous = current;
 				current = current->next;		
+				tmp = current;
 			}
 
 			previous->next = current->next;	
-		}		                               
+		}		
+
 		delete tmp;
 		tmp = NULL;
 		size--; 
 	}
 }
+
+void PostList::replace(int index, ItemType item)
+{
+	Node* temp = firstNode;
+
+	for (int i = 0; i < index - 1; i++)  // move to node at specified index
+	{
+		temp = temp->next;
+	}
+
+	temp->item = item;           // replace the item  
+}
+
+
+
+// remove an item at a specified position in the list
+/*
+void PostList::remove(int index)
+{
+	bool success = (index > 0) && (index < size + 1);
+	if (success)
+	{  
+		if (index == 1) {
+			Node* temp = firstNode;
+			firstNode = firstNode->next;
+			delete temp;
+			size--;
+		}
+
+		else {
+			Node* temp = firstNode;
+			for (int i = 1; i < index - 1; i++) {
+				if (temp != NULL) {
+					temp = temp->next;
+				}
+			}
+			Node* tmp = temp->next;
+			delete tmp;
+			temp->next = temp->next->next;
+			size--;
+		}
+	}
+}
+*/
 
 ItemType PostList::get(int index)
 {
@@ -148,11 +196,25 @@ void PostList::topicPrint(string topicInput)
 		{
 			if (temp->item.getTopic() == topicInput)
 			{
-				cout << "\nPosted by: " << temp->item.getUsername() << endl;
+				cout << "\nPost ID: " + to_string(temp->item.getID()) << endl;
+				cout << "Posted by: " << temp->item.getUsername() << endl;
 				cout << "Topic: " << temp->item.getTopic() << endl;
 				cout << "Text: " << temp->item.getText() << endl;
-				cout << "Comments: " << endl;
+				CommentList commentList;
+				CommentList empty;
+				commentList = temp->item.getComment();
+
+				if (commentList.size != 0) {
+					cout << "Comments: ";
+					commentList.print();
+				}
+				else if (commentList.size == 0) {
+					cout << "There are no comments yet on this post.";
+				}
+
+				cout << endl;
 			}
+
 			temp = temp->next;		
 		}
 	}
@@ -171,14 +233,25 @@ void PostList::accPrint(User user)
 		{
 			if (temp->item.getUsername() == user.getName())
 			{
-				cl = temp->item.getComment();
-				cout << "\nPosted by: " << temp->item.getUsername() << endl;
+				cout << "\nPost ID: " + to_string(temp->item.getID()) << endl;
+				cout << "Posted by: " << temp->item.getUsername() << endl;
 				cout << "Topic: " << temp->item.getTopic() << endl;
 				cout << "Text: " << temp->item.getText() << endl;
-				cout << "Comments: ";
-				cl.print();
-				cout << std::endl;
+				CommentList commentList;
+				CommentList empty;
+				commentList = temp->item.getComment();
+
+				if (commentList.size != 0) {
+					cout << "Comments: ";
+					commentList.print();
+				}
+				else if (commentList.size == 0) {
+					cout << "There are no comments yet on this post.";
+				}
+
+				cout << endl;
 			}
+
 			temp = temp->next;
 		}
 	}
@@ -194,12 +267,22 @@ void PostList::printAll()
 	{
 		while (temp != NULL)
 		{
-			cout << "\nPosted by: " << temp->item.getUsername() << endl;
+			cout << "\nPost ID: " + to_string(temp->item.getID()) << endl;
+			cout << "Posted by: " << temp->item.getUsername() << endl;
 			cout << "Topic: " << temp->item.getTopic() << endl;
 			cout << "Text: " << temp->item.getText() << endl;
-			cout << "Comments: ";
-			CommentList commentList = temp->item.getComment();
-			commentList.print();
+			CommentList commentList;
+			CommentList empty;
+			commentList = temp->item.getComment();
+	
+			if (commentList.size != 0) {
+				cout << "Comments: ";
+				commentList.print();
+			}
+			else if (commentList.size == 0) {
+				cout << "There are no comments yet on this post.";
+			}
+
 			cout << endl;
 			temp = temp->next;
 		}
@@ -242,6 +325,7 @@ void PostList::deleteAllNodes()
 		next = current->next;
 		delete current;
 		current = next;
+		size--;
 	}
 	firstNode = NULL;
 }

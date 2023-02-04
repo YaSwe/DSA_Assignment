@@ -12,9 +12,11 @@ private:
 	User user;
 	string text;
 	CommentList commentList;
+	int postID;
+	int likes;
 
 public:
-	Post(string topic, User user, string text, CommentList commentList);
+	Post(string topic, User user, string text, CommentList commentList, int postID, int likes);
 
 	Post() = default;
 	
@@ -31,6 +33,10 @@ public:
 	void setText(string newText);
 
 	CommentList getComment();
+
+	int getID();
+
+	void print();
 
 	void setComment(CommentList newCommentList);
 

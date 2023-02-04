@@ -1,14 +1,16 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <sstream>
 #include "User.h"
 #include "Post.h"
 #include "PostList.h"
 #include "TopicList.h"
 #include "CommentList.h"
+#pragma once
 
-using namespace std;
 
+static int current_id = 1;
 int option;
 string username, password, fname, usern, pw;
 User user;
@@ -18,6 +20,7 @@ ifstream inFile; // read file
 TopicList topicList;
 PostList postList;
 PostList accList;
+CommentList commentList;
 
 // Creating a Post
 void CreatePost(User user)
@@ -34,7 +37,7 @@ void CreatePost(User user)
     getline(cin, post);
 
     // create new post object
-    Post p(topic, user, post, commentList);
+    Post p(topic, user, post, commentList, current_id++, 0);
     // add post into post list
     // postList.add(p);
     
@@ -45,10 +48,10 @@ void CreatePost(User user)
     }
     else
     {
-        outFile << user.getName() << endl;
+        outFile << endl << user.getName() << endl;
         outFile << topic << endl;
         outFile << post << endl;
-
+        outFile << " ";
         /*
         for (const auto& word : commentList)
         {
@@ -62,10 +65,13 @@ void CreatePost(User user)
     } 
 }
 
+
+
 // Initialize List
-void readForum(User user)
+void ReadForum(User user)
 {
-    string topic, username, text;
+    
+    string topic, username, text, likes;
     string comment;
     // load the forum data
 	inFile.open("forumdata.txt");
@@ -75,86 +81,88 @@ void readForum(User user)
 	}
 	else
 	{
-        while (getline(inFile, username) && (getline(inFile, topic) && (getline(inFile, text) && (getline(inFile, comment, '\n')))))
+        while (getline(inFile, username) && (getline(inFile, topic) && (getline(inFile, text) && (getline(inFile, comment)))))
 		{      
             CommentList commentList;
+            commentList.size = 0;
             User u(username, "123");
 
-            int c = comment.find(',');
+            cout << comment;
+            if (comment == " ") {
+                Post p = Post(topic, u, text, commentList, current_id++, comment, likes);
+                postList.add(p);
+            }
             
             //cout << to_string(c);
-                 
-            
-            while (comment != "") 
-            {
-                if (comment.find(',') == NULL) 
-                {
-                    cout << "NULL";
-                    comment = ",";
-                }
 
-                else if (comment.find(',') != NULL) 
+            else {
+                while (comment != " ")
                 {
-                    int comma = comment.find(',');
-                    string comment1 = comment.substr(0, comma);
-                    commentList.add(comment1);
-                    //cout << comment1;
-                    cout << " length: " + to_string(comment1.length()) + " " + to_string(comment.length()) << endl;
-                    cout << comment << endl;
-                    //cout << comment.length();
-                    cout << comment1 << endl;
-                    //cout << comment.substr(comment1.length() + 1, comment.length() - 1);
-                    //commentList.print();
-                    
-                    /*
-                    size_t pos = comment.find(comment1);
-
-                    if (pos != std::string::npos)
+                    if (comment.find(',') == NULL)
                     {
-                        comment.erase(pos, comment1.length());
-                        cout << comment;
+                        cout << "NULL";
+                        comment = ",";
                     }
-                    */
-                    
-                    if (comment1.length() + 1 == comment.length()) {
-                        comment = "";
-                    }
-                    if (comment1.length() == comment.length()) {
-                        comment = "";
-                    }
-                    else {
-                        cout << "work";
+
+                    else if (comment.find(',') != NULL)
+                    {
+                        int comma = comment.find(',');
+                        string comment1 = comment.substr(0, comma);
+                        commentList.add(comment1);
+                        //cout << comment1;
+                        //cout << " length: " + to_string(comment1.length()) + " " + to_string(comment.length()) << endl;
+                        //cout << comment << endl;
+                        //cout << comment.length();
+                        //cout << comment1 << endl;
+                        //cout << comment.substr(comment1.length() + 1, comment.length() - 1);
+                        //commentList.print();
+
+                        /*
                         size_t pos = comment.find(comment1);
 
-                        comment = comment.substr(comment1.length() + 1, comment.length() - 1);
-                    }     
-                    
-                }
-            }
-            
-            /*
-            while (std::getline(inputFile, line)) {
-                std::size_t firstComma = line.find(',');
-                std::string topic = line.substr(0, firstComma);
-                std::size_t secondComma = line.find(',', firstComma + 1);
-                std::string name = line.substr(firstComma + 1, secondComma - firstComma - 1);
-                std::size_t thirdComma = line.find(',', secondComma + 1);
-                std::string comment = line.substr(secondComma + 1, thirdComma - secondComma - 1);
-                int likes = std::stoi(line.substr(thirdComma + 1));
-                addPost(topic, name, comment, likes);
-            }
-            */
-            /*
-            size_t firstComma = comment.find(',');
-            string comment1 = comment.substr(0, firstComma);
-            size_t secondComma = comment.find(',');
-            string comment2 = comment.substr(firstComma + 1, secondComma - firstComma - 1);
-            commentList.add(comment1);
-            */
+                        if (pos != std::string::npos)
+                        {
+                            comment.erase(pos, comment1.length());
+                            cout << comment;
+                        }
+                        */
 
-			Post p = Post(topic, u, text, commentList);
-			postList.add(p);
-            cout << "work2";
+                        if (comment1.length() + 1 == comment.length()) {
+                            //cout << "work 1";
+                            comment = " ";
+                            break;
+                        }
+                        if (comment1.length() == comment.length()) {
+                            //cout << "work 2";
+                            comment = " ";
+                            break;
+                        }
+                        else {
+                            //cout << "work";
+
+                            comment = comment.substr(comment1.length() + 1, comment.length() - 1);
+                        }
+                    }
+                }
+
+                /*
+                while (std::getline(inputFile, line)) {
+                    std::size_t firstComma = line.find(',');
+                    std::string topic = line.substr(0, firstComma);
+                    std::size_t secondComma = line.find(',', firstComma + 1);
+                    std::string name = line.substr(firstComma + 1, secondComma - firstComma - 1);
+                    std::size_t thirdComma = line.find(',', secondComma + 1);
+                    std::string comment = line.substr(secondComma + 1, thirdComma - secondComma - 1);
+                    int likes = std::stoi(line.substr(thirdComma + 1));
+                    addPost(topic, name, comment, likes);
+                }
+                */
+
+
+                Post p = Post(topic, u, text, commentList, current_id++);
+                postList.add(p);
+                cout << "work2";
+            }
 
 		}
 
@@ -235,12 +243,56 @@ void PrintTopicForum(User user)
 // View My Posts
 void MyPosts(User user)
 {
-    string topic, username, text, comment, str;
+    int option, wantedPost;
+    string newText;
+    do {
+		cout << "\nWelcome, " << user.getName() << endl;
+		cout << "---------------- My Posts -------------------" << endl;
+		postList.accPrint(user);
+		cout << postList.getLength();
+        cout << "\n[1] Delete a post \n[2] Edit a post" << endl << "Choice: ";
+        cin >> option;
 
-    cout << "\nWelcome, " << user.getName() << endl;
-    cout << "---------------- My Posts -------------------" << endl;
-    postList.accPrint(user);
-    cout << postList.getLength();
+        // delete a post
+        if (option == 1)
+        {
+            cout << "Which post?: ";
+            cin >> wantedPost;
+            std::istringstream(wantedPost) >> wantedPost;
+            postList.remove(wantedPost);
+            
+            cout << postList.getLength();
+			postList.writeFile();
+            postList.deleteAllNodes();
+            ReadForum(user);
+            
+            option = 0;
+            break;
+        }
+
+        // edit a post
+        else if (option == 2)
+        {
+			cout << "Which post?: ";
+			cin >> wantedPost;
+            cout << "New post: ";
+            cin.ignore();
+            getline(cin, newText);
+            cout << newText;
+            Post p = postList.get(wantedPost);
+            p.print();
+            p.setText(newText);
+            p.print();
+            postList.replace(wantedPost, p);
+            postList.writeFile();
+            postList.deleteAllNodes();
+            ReadForum(user);
+
+            option = 0;
+            break;
+        }
+
+    } while (option != 0);
 }
 
 void PrintAllPosts()
@@ -249,11 +301,11 @@ void PrintAllPosts()
     string comment;
     do
     {
-        CommentList commentList;
 		cout << "---------------- My Posts -------------------" << endl;
 		postList.printAll();
 		cout << "Which post to comment: ";
 		cin >> index;
+        if (index == 0) { break; }
         Post p = postList.get(index);
         cout << "Comment: ";
         cin.ignore();
@@ -270,7 +322,8 @@ void PrintAllPosts()
 void MainMenu(User user)
 {
     // loads the forum data
-    readForum(user);
+    postList.deleteAllNodes();
+    ReadForum(user);
 
     int option;
     do
@@ -291,7 +344,12 @@ void MainMenu(User user)
         // view all posts
         else if (option == 3)
         {
+                   
+            postList.deleteAllNodes();
+            current_id = 1;
+            ReadForum(user);
             PrintAllPosts();
+
         }
         // view posts with specified topic
         else if (option == 4)

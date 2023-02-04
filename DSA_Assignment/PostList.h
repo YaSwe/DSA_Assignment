@@ -43,6 +43,8 @@ public:
 
 	void printAll();
 
+	void replace(int index, ItemType item);
+
 	void writeFile();
 
 	void deleteAllNodes();
