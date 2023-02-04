@@ -1,7 +1,7 @@
 #include "Post.h"
 #include "PostList.h"
 
-Post::Post(string ptopic, User puser, string ptext, CommentList pcommentList, int id)
+Post::Post(string ptopic, User puser, string ptext, CommentList pcommentList, int id, int likes)
 {
 	topic = ptopic;
 	user = puser;
@@ -62,3 +62,6 @@ void Post::print() {
 	cout << topic << text << postID;
 }
 
+int Post::getLikes() {
+	return likes;
+}

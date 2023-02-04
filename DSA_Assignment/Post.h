@@ -16,7 +16,7 @@ private:
 	int likes;
 
 public:
-	Post(string topic, User user, string text, CommentList commentList, int postID);
+	Post(string topic, User user, string text, CommentList commentList, int postID, int likes);
 
 	Post() = default;
 	
@@ -37,6 +37,8 @@ public:
 	int getID();
 
 	void print();
+
+	int getLikes();
 
 	void setComment(CommentList newCommentList);
 

@@ -2,27 +2,40 @@ yaswe
 Lists
 How do I make a list?
 comment1,test,test,test,
+0
 jieren
 File handling
 trunc bad
 comment2,lalala,
+0
 yaswe
 Array
 How do I iterate through an array?
 test,yo,0,
+0
 yaswe
 Lists
 lists suck
 comment1,test,test2,
+0
 jieren
 File handling
 blahblah
 comment2,ya,
+0
 test
 testing
 testo
  
+0
 test
 testing 
 test3
  
+0
+
+test
+test
+test
+ 
+0

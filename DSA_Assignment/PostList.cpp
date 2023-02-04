@@ -278,10 +278,13 @@ void PostList::printAll()
 			if (commentList.size != 0) {
 				cout << "Comments: ";
 				commentList.print();
+				cout << endl;
 			}
 			else if (commentList.size == 0) {
-				cout << "There are no comments yet on this post.";
+				cout << "There are no comments yet on this post.\n";
 			}
+
+			cout << "Likes: " << to_string(temp->item.getLikes());
 
 			cout << endl;
 			temp = temp->next;
@@ -308,8 +311,11 @@ void PostList::writeFile()
 			outFile << temp->item.getTopic() << endl;
 			outFile << temp->item.getText() << endl;
 			CommentList cl;
+			Post p;
 			cl = temp->item.getComment();
-			outFile << cl.CommentString() << endl;		
+			outFile << cl.CommentString() << endl;	
+			p = temp->item;
+			outFile << p.getLikes() << endl;
 			temp = temp->next;
 		}
 		outFile.close();

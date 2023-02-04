@@ -36,7 +36,7 @@ void CreatePost(User user)
     getline(cin, post);
 
     // create new post object
-    Post p(topic, user, post, commentList, current_id++);
+    Post p(topic, user, post, commentList, current_id++, 0);
     // add post into post list
     // postList.add(p);
     
@@ -50,7 +50,7 @@ void CreatePost(User user)
         outFile << endl << user.getName() << endl;
         outFile << topic << endl;
         outFile << post << endl;
-        outFile << " ";
+        outFile << " " << endl;
         /*
         for (const auto& word : commentList)
         {
@@ -59,6 +59,7 @@ void CreatePost(User user)
         */
 
         //outFile << comment << endl;
+        outFile << "0";
         outFile.close();
         cout << "\nPost created succesfully." << endl;
     } 
@@ -80,21 +81,27 @@ void ReadForum(User user)
 	}
 	else
 	{
-        while (getline(inFile, username) && (getline(inFile, topic) && (getline(inFile, text) && (getline(inFile, comment)))))
+        while (getline(inFile, username) && getline(inFile, topic) && getline(inFile, text) && getline(inFile, comment) && getline(inFile, likes))
 		{      
+            int like = 0;
             CommentList commentList;
             commentList.size = 0;
             User u(username, "123");
 
             cout << comment;
+
             if (comment == " ") {
-                Post p = Post(topic, u, text, commentList, current_id++);
+                
+                std::istringstream(likes) >> like;
+                Post p = Post(topic, u, text, commentList, current_id++, like);
                 postList.add(p);
             }
             
             //cout << to_string(c);
 
             else {
+
+
                 while (comment != " ")
                 {
                     if (comment.find(',') == NULL)
@@ -141,8 +148,15 @@ void ReadForum(User user)
 
                             comment = comment.substr(comment1.length() + 1, comment.length() - 1);
                         }
+                        
                     }
+
                 }
+
+                std::istringstream(likes) >> like;
+                Post p = Post(topic, u, text, commentList, current_id++, like);
+                postList.add(p);
+                cout << "work2";
 
                 /*
                 while (std::getline(inputFile, line)) {
@@ -156,11 +170,7 @@ void ReadForum(User user)
                     addPost(topic, name, comment, likes);
                 }
                 */
-
-
-                Post p = Post(topic, u, text, commentList, current_id++);
-                postList.add(p);
-                cout << "work2";
+                
             }
 
 		}
