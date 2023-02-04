@@ -1,4 +1,5 @@
 #include "PostList.h"	
+#include "CommentList.h"
 #include <fstream>
 #include <string>
    
@@ -116,7 +117,26 @@ int PostList::getLength()
 }
 
 //------------------- Other useful functions -----------------
-void PostList::print(string topicInput)
+void PostList::print()
+{
+	Node* temp = firstNode;
+
+	if (temp == NULL)
+		cout << "The list is empty." << endl;
+	else
+	{
+		while (temp != NULL)
+		{
+			cout << "\nPosted by: " << temp->item.getUsername() << endl;
+			cout << "Topic: " << temp->item.getTopic() << endl;
+			cout << "Text: " << temp->item.getText() << endl;
+			cout << "Comments: " << endl;
+			temp = temp->next;
+		}
+	}
+}
+
+void PostList::topicPrint(string topicInput)
 {
 	Node* temp = firstNode;
 
@@ -141,6 +161,7 @@ void PostList::print(string topicInput)
 void PostList::accPrint(User user)
 {
 	Node* temp = firstNode;
+	CommentList cl;
 
 	if (temp == NULL)
 		cout << "The list is empty." << endl;
@@ -150,11 +171,36 @@ void PostList::accPrint(User user)
 		{
 			if (temp->item.getUsername() == user.getName())
 			{
+				cl = temp->item.getComment();
 				cout << "\nPosted by: " << temp->item.getUsername() << endl;
 				cout << "Topic: " << temp->item.getTopic() << endl;
 				cout << "Text: " << temp->item.getText() << endl;
-				cout << "Comments: " << endl;
+				cout << "Comments: ";
+				cl.print();
+				cout << std::endl;
 			}
+			temp = temp->next;
+		}
+	}
+}
+
+void PostList::printAll()
+{
+	Node* temp = firstNode;
+
+	if (temp == NULL)
+		cout << "The list is empty." << endl;
+	else
+	{
+		while (temp != NULL)
+		{
+			cout << "\nPosted by: " << temp->item.getUsername() << endl;
+			cout << "Topic: " << temp->item.getTopic() << endl;
+			cout << "Text: " << temp->item.getText() << endl;
+			cout << "Comments: ";
+			CommentList commentList = temp->item.getComment();
+			commentList.print();
+			cout << endl;
 			temp = temp->next;
 		}
 	}
@@ -178,11 +224,26 @@ void PostList::writeFile()
 			outFile << temp->item.getUsername() << endl;
 			outFile << temp->item.getTopic() << endl;
 			outFile << temp->item.getText() << endl;
-			outFile << "Comment" << endl;		
+			CommentList cl;
+			cl = temp->item.getComment();
+			outFile << cl.CommentString() << endl;		
 			temp = temp->next;
 		}
 		outFile.close();
 	}
+}
+
+void PostList::deleteAllNodes()
+{
+	Node* current = firstNode;
+	Node* next;
+
+	while (current != NULL) {
+		next = current->next;
+		delete current;
+		current = next;
+	}
+	firstNode = NULL;
 }
 
 

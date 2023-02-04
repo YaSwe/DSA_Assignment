@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommentList.cpp" />
     <ClCompile Include="DSA_Assignment.cpp" />
     <ClCompile Include="PostList.cpp" />
     <ClCompile Include="Post.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="User.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommentList.h" />
     <ClInclude Include="PostList.h" />
     <ClInclude Include="Post.h" />
     <ClInclude Include="TopicList.h" />

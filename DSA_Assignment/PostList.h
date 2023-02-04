@@ -1,6 +1,7 @@
 #pragma once
 #include<iostream>
 #include "Post.h"
+#include "CommentList.h"
 using namespace std;
 
 typedef Post ItemType;
@@ -14,7 +15,8 @@ public:
 		Node* next;	
 	};
 
-	Node* firstNode;	
+	
+	Node* firstNode;
 	int  size;
 
 	PostList();
@@ -33,11 +35,17 @@ public:
 
 	int getLength();
 
-	void print(string topicInput);
+	void print();
+
+	void topicPrint(string topicInput);
 
 	void accPrint(User user);
 
+	void printAll();
+
 	void writeFile();
+
+	void deleteAllNodes();
 
 };
 

@@ -1,7 +1,7 @@
 #include "Post.h"
 #include "PostList.h"
 
-Post::Post(string ptopic, User puser, string ptext, list<string> pcommentList)
+Post::Post(string ptopic, User puser, string ptext, CommentList pcommentList)
 {
 	topic = ptopic;
 	user = puser;
@@ -39,12 +39,12 @@ void Post::setText(string newText)
 	text = newText;
 }
 
-list<string> Post::getComment()
+CommentList Post::getComment()
 {
 	return commentList;
 }
 
-void Post::setComment(list<string> newCommentList)
+void Post::setComment(CommentList newCommentList)
 {
 	commentList = newCommentList;
 }

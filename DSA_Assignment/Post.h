@@ -2,6 +2,8 @@
 #include <iostream>
 #include <list>
 #include "User.h"
+#include "CommentList.h"
+
 using namespace std;
 
 class Post {
@@ -9,10 +11,10 @@ private:
 	string topic;
 	User user;
 	string text;
-	list<string> commentList;
+	CommentList commentList;
 
 public:
-	Post(string topic, User user, string text, list<string> commentList);
+	Post(string topic, User user, string text, CommentList commentList);
 
 	Post() = default;
 	
@@ -28,9 +30,9 @@ public:
 	
 	void setText(string newText);
 
-	list<string> getComment();
+	CommentList getComment();
 
-	void setComment(list<string> newCommentList);
+	void setComment(CommentList newCommentList);
 
 };
 
