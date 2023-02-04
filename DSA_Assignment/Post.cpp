@@ -8,6 +8,7 @@ Post::Post(string ptopic, User puser, string ptext, CommentList pcommentList, in
 	text = ptext;
 	commentList = pcommentList;
 	postID = id;
+	likes = 0;
 }
 
 string Post::getTopic()

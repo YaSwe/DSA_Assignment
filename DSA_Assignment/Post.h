@@ -13,6 +13,7 @@ private:
 	string text;
 	CommentList commentList;
 	int postID;
+	int likes;
 
 public:
 	Post(string topic, User user, string text, CommentList commentList, int postID);
