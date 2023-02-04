@@ -1,14 +1,13 @@
 #include "Post.h"
 #include "PostList.h"
 
-Post::Post(string ptopic, User puser, string ptext, CommentList pcommentList, int id, int likes)
+Post::Post(string ptopic, User puser, string ptext, CommentList pcommentList, int id)
 {
 	topic = ptopic;
 	user = puser;
 	text = ptext;
 	commentList = pcommentList;
 	postID = id;
-	likes = 0;
 }
 
 string Post::getTopic()

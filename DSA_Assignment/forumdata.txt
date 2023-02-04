@@ -4,29 +4,17 @@ How do I make a list?
 comment1,test,test,test,
 jieren
 File handling
-How do I trunc?
+trunc bad
 comment2,lalala,
 yaswe
 Array
 How do I iterate through an array?
-test,yo,
+test,yo,0,
 yaswe
 Lists
-How do I make a list?
+lists suck
 comment1,test,test2,
 jieren
 File handling
-How do I trunc?
+blahblah
 comment2,ya,
-test
-test
-test
-test,pleaaaaaaaase,
-test
-test
-testo
-test,pleaaaaaaaase,
-test
-test
-test
-

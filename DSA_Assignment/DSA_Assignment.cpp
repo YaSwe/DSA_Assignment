@@ -7,9 +7,8 @@
 #include "PostList.h"
 #include "TopicList.h"
 #include "CommentList.h"
-#pragma once
 
-
+using namespace std;
 static int current_id = 1;
 int option;
 string username, password, fname, usern, pw;
@@ -37,7 +36,7 @@ void CreatePost(User user)
     getline(cin, post);
 
     // create new post object
-    Post p(topic, user, post, commentList, current_id++, 0);
+    Post p(topic, user, post, commentList, current_id++);
     // add post into post list
     // postList.add(p);
     
@@ -89,7 +88,7 @@ void ReadForum(User user)
 
             cout << comment;
             if (comment == " ") {
-                Post p = Post(topic, u, text, commentList, current_id++, comment, likes);
+                Post p = Post(topic, u, text, commentList, current_id++);
                 postList.add(p);
             }
             
@@ -284,9 +283,8 @@ void MyPosts(User user)
             p.setText(newText);
             p.print();
             postList.replace(wantedPost, p);
+            postList.printAll();
             postList.writeFile();
-            postList.deleteAllNodes();
-            ReadForum(user);
 
             option = 0;
             break;
@@ -301,7 +299,7 @@ void PrintAllPosts()
     string comment;
     do
     {
-		cout << "---------------- My Posts -------------------" << endl;
+		cout << "\n---------------- My Posts -------------------" << endl;
 		postList.printAll();
 		cout << "Which post to comment: ";
 		cin >> index;
