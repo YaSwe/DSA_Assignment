@@ -1,3 +1,9 @@
+/*
+P02
+Chua Jie Ren - S10222145D
+THU YA SWE - S10222373G
+*/
+
 #include "PostList.h"	
 #include "CommentList.h"
 #include <fstream>
@@ -68,7 +74,7 @@ bool PostList::add(int index, ItemType item)
 
 void PostList::remove(int index)
 {
-	bool success = (index >= 0) && (index <= size - 1) && (size != 0);
+	bool success = (index >= 0) && (index <= size) && (size != 0);
 	if (success)
 	{
 		Node* tmp = firstNode;
@@ -82,12 +88,13 @@ void PostList::remove(int index)
 			{
 				previous = current;
 				current = current->next;		
-				tmp = current;
+				tmp = previous->next;
 			}
 
 			previous->next = current->next;	
 		}		
 
+		cout << tmp->item.getText();
 		delete tmp;
 		tmp = NULL;
 		size--; 
@@ -141,7 +148,7 @@ void PostList::remove(int index)
 ItemType PostList::get(int index)
 {
 	ItemType dataItem;
-	bool success = (index >= 0) && (index <= size - 1);
+	bool success = (index >= 0) && (index <= size);
 	if (success)
 	{
 		Node* current = firstNode;
@@ -184,6 +191,7 @@ void PostList::print()
 	}
 }
 
+// print via topic
 void PostList::topicPrint(string topicInput)
 {
 	Node* temp = firstNode;
@@ -220,6 +228,7 @@ void PostList::topicPrint(string topicInput)
 	}
 }
 
+// print according to user
 void PostList::accPrint(User user)
 {
 	Node* temp = firstNode;
@@ -257,6 +266,7 @@ void PostList::accPrint(User user)
 	}
 }
 
+// print all posts
 void PostList::printAll()
 {
 	Node* temp = firstNode;
@@ -287,11 +297,13 @@ void PostList::printAll()
 			cout << "Likes: " << to_string(temp->item.getLikes());
 
 			cout << endl;
+
 			temp = temp->next;
 		}
 	}
 }
 
+// updating of file
 void PostList::writeFile()
 {
 	Node* temp = firstNode;
@@ -322,6 +334,7 @@ void PostList::writeFile()
 	}
 }
 
+// clearing of postlist
 void PostList::deleteAllNodes()
 {
 	Node* current = firstNode;

@@ -1,3 +1,9 @@
+/*
+P02
+Chua Jie Ren - S10222145D
+THU YA SWE - S10222373G
+*/
+
 #include "CommentList.h"	
 #include <fstream>
 #include <string>
@@ -119,7 +125,7 @@ int CommentList::getLength()
 	return size;
 }
 
-
+// returning of all comments in a string
 string CommentList::CommentString() {
 	string s;
 	Node* temp = firstNode;
@@ -143,6 +149,7 @@ string CommentList::CommentString() {
 
 
 //------------------- Other useful functions -----------------
+// printing of list
 void CommentList::print()
 {
 	Node* temp = firstNode;

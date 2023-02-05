@@ -1,3 +1,11 @@
+/*
+P02 Group 8
+Chua Jie Ren - S10222145D
+THU YA SWE - S10222373G
+
+Additional features - View posts by selected topic (line 232), like a post (line 362)
+*/
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -17,12 +25,11 @@ User user;
 ofstream outFile; // write file  
 ifstream inFile; // read file
 
-TopicList topicList;
-PostList postList;
-PostList accList;
+TopicList topicList; 
+PostList postList; 
 CommentList commentList;
 
-// Creating a Post
+// Create new post
 void CreatePost(User user)
 {
     string topic, post, comment;
@@ -38,9 +45,10 @@ void CreatePost(User user)
 
     // create new post object
     Post p(topic, user, post, commentList, current_id++, 0);
-    // add post into post list
-    // postList.add(p);
+    // add new post into post list
+    postList.add(p);
     
+    // open forumdata.txt to append the new post
     outFile.open("forumdata.txt", ios_base::app);
     if (outFile.fail())
     {
@@ -52,12 +60,6 @@ void CreatePost(User user)
         outFile << topic << endl;
         outFile << post << endl;
         outFile << " " << endl;
-        /*
-        for (const auto& word : commentList)
-        {
-            comment += word;
-        }
-        */
 
         //outFile << comment << endl;
         outFile << "0";
@@ -68,13 +70,12 @@ void CreatePost(User user)
 
 
 
-// Initialize List
+// Initializing List 
 void ReadForum(User user)
 {
-    
     string topic, username, text, likes;
     string comment;
-    // load the forum data
+    // open the forumdata.txt to load the posts data
 	inFile.open("forumdata.txt");
 	if (inFile.fail())
 	{
@@ -89,14 +90,14 @@ void ReadForum(User user)
             commentList.size = 0;
             User u(username, "123");
 
-
+            // if no comments
             if (comment == " ") {
                 
                 stringstream ss;
                 ss << likes;
                 ss >> like;
-                //cout << to_string(like);
-
+                cout << to_string(like);
+                // current_id++ so that it is assigned automatically
                 Post p = Post(topic, u, text, commentList, current_id++, like);
                 postList.add(p);
             }
@@ -105,7 +106,7 @@ void ReadForum(User user)
 
             else {
 
-
+                // Getting the comments, placing it into a CommentList
                 while (comment != " ")
                 {
                     if (comment.find(',') == NULL)
@@ -137,12 +138,14 @@ void ReadForum(User user)
                         }
                         */
 
-                        if (comment1.length() + 1 == comment.length()) {
+                        if (comment1.length() + 1 == comment.length()) 
+                        {
                             //cout << "work 1";
                             comment = " ";
                             break;
                         }
-                        if (comment1.length() == comment.length()) {
+                        if (comment1.length() == comment.length()) 
+                        {
                             //cout << "work 2";
                             comment = " ";
                             break;
@@ -157,10 +160,12 @@ void ReadForum(User user)
 
                 }
 
+                // converting to integer
                 stringstream ss;
                 ss << likes;
                 ss >> like;
                 //cout << to_string(like);
+                // automatically assigned id
                 Post p = Post(topic, u, text, commentList, current_id++, like);
                 postList.add(p);
                 //cout << "work2";
@@ -179,13 +184,11 @@ void ReadForum(User user)
                 */
                 
             }
-
 		}
-
 		inFile.close();
 	}
 
-    // load the topic data
+    // open topicdata.txt to load topic data 
     inFile.open("topicdata.txt");
     if (inFile.fail())
     {
@@ -202,7 +205,7 @@ void ReadForum(User user)
 }
 
 
-// Creating of topic
+// Creating new topic
 void CreateTopic(User user)
 {
     string topic;
@@ -211,6 +214,7 @@ void CreateTopic(User user)
     cout << "Enter a C++ topic: ";
     cin >> topic;
 
+    // open topicdata.txt to append the new topic
     outFile.open("topicdata.txt", ios_base::app);
     if (outFile.fail())
     {
@@ -232,10 +236,12 @@ void PrintTopicForum(User user)
 
     cout << "\n----------- Topics --------------" << endl;
 
+    // if no topics are found
     if (topicList.getLength() < 1)
     {
         cout << "\nNo topics are found. Create one? [Y/N]" << endl;
         cin >> option;
+        // create topic
         if (option == 'Y')
         {
             CreateTopic(user);
@@ -245,8 +251,10 @@ void PrintTopicForum(User user)
             PrintTopicForum(user);
         }
     }
+    // display all topics and select topic 
     else
     {
+        // display all topics
         topicList.print();
         cout << "\nSelect topic or '0' to exit: ";
         cin >> topicInput;
@@ -254,11 +262,12 @@ void PrintTopicForum(User user)
             return;
         }
         cout << "\n---------------- " << topicInput << " Posts -------------------" << endl;
+        // display posts based on selected topic
         postList.topicPrint(topicInput);
     }
 }
 
-// View My Posts
+// View posts made by the logged in user
 void MyPosts(User user)
 {
     int option, wantedPost;
@@ -273,24 +282,22 @@ void MyPosts(User user)
 
         // delete a post
         if (option == 1)
-        {
+        {        
             cout << "Which post?: ";
             cin >> wantedPost;
             std::istringstream(wantedPost) >> wantedPost;
             postList.remove(wantedPost);
-            
-            //cout << postList.getLength();
+            cout << postList.getLength();
 			postList.writeFile();
             postList.deleteAllNodes();
-            ReadForum(user);
-            
+            current_id = 0;
             option = 0;
             break;
         }
 
         // edit a post
         else if (option == 2)
-        {
+        {         
 			cout << "Which post?: ";
 			cin >> wantedPost;
             cout << "New post: ";
@@ -298,11 +305,8 @@ void MyPosts(User user)
             getline(cin, newText);
             //cout << newText;
             Post p = postList.get(wantedPost);
-            p.print();
             p.setText(newText);
-            p.print();
             postList.replace(wantedPost, p);
-            postList.printAll();
             postList.writeFile();
 
             option = 0;
@@ -312,7 +316,7 @@ void MyPosts(User user)
     } while (option != 0);
 }
 
-
+// printing of all posts
 void PrintAllPosts()
 {
     int index;
@@ -324,15 +328,23 @@ void PrintAllPosts()
 		postList.printAll();
 		cout << "\nChoose an option: \n[1] Comment on a post \n[2] Like a post \n[0] Exit \nYour Option: ";
         cin >> option;
-        if (option == 0) { break; }
+
+        // exit 
+        if (option == 0) 
+        { 
+            break; 
+        }
+        // comment on a post
         else if (option == 1) 
-        {
+        {          
             cout << "Which post do you want to comment on? ";
             cin >> index;
+            // retrieve post using index input
             Post p = postList.get(index);
             cout << "Comment: ";
             cin.ignore();
             getline(cin, comment);
+            // updating the commentlist, then updating the post in postlist.
             commentList = p.getComment();
             commentList.add(comment);
             p.setComment(commentList);
@@ -341,12 +353,15 @@ void PrintAllPosts()
             option = 0;
         }
 
+        // like a post
         else if (option == 2) 
         {
             cout << "Which post do you want to like?: ";
             cin >> index;
+            // retrieve post using index input
             Post p = postList.get(index);
-            p.setLikes(p.getLikes() + 1);
+            // updating of selected post's likes.
+            p.setLikes(p.getLikes() + 1);         
             postList.replace(index, p);
             postList.writeFile();
             option = 0;
@@ -356,11 +371,12 @@ void PrintAllPosts()
 }
 
 
-
+// display main menu with all options
 void MainMenu(User user)
 {
-    // loads the forum data
+    // delete current linked list
     postList.deleteAllNodes();
+    // load forum and topic data
     ReadForum(user);
 
     int option;
@@ -370,33 +386,34 @@ void MainMenu(User user)
         cout << "Choose one option: \n[1] Create a post \n[2] Create a topic \n[3] View Forum \n[4] View Forum by Topic \n[5] My Posts \n[6] Log out" << endl << "Choice: ";
         cin >> option;
 
-        // create post
+        // create new post
         if (option == 1)
-        {
+        {         
             CreatePost(user);
         }
+        // create new topic
         else if (option == 2)
-        {
+        {          
             CreateTopic(user);
         }
-        // view all posts
+        // view all posts by all users
         else if (option == 3)
         {
-                   
+            // delete current linked list      
             postList.deleteAllNodes();
             current_id = 1;
-            ReadForum(user);
+            // load forum and topic data
+            ReadForum(user);         
             PrintAllPosts();
-
         }
-        // view posts with specified topic
+        // view posts by selected topic
         else if (option == 4)
-        {
+        {          
             PrintTopicForum(user);
         }
         // view own posts
         else if (option == 5)
-        {
+        {        
             MyPosts(user);
         }
         // log out
@@ -409,6 +426,7 @@ void MainMenu(User user)
     } while (option != 0);
 }
 
+// register new account
 void Register() {
 
     bool notExists = true;
@@ -417,16 +435,20 @@ void Register() {
     cout << "Create a password: ";
     cin >> password;
 
+    // open username.txt to check if account with username exist
     inFile.open("username.txt");
-    while (!inFile.eof()) {
+    while (!inFile.eof()) 
+    {
         getline(inFile, usern);
-        if (username == usern) {
+        if (username == usern) 
+        {
             notExists = false;
         }
     }
 
-    // if account with username exist
-    if (!notExists) {
+    // if account with same username exist
+    if (!notExists) 
+    {
         cout << "There is already an existing account with that username. Please try again." << endl;
         cout << endl;
         return;
@@ -434,8 +456,9 @@ void Register() {
 
     inFile.close();
 
-    // if account with username does not exist
-    if (notExists) {
+    // if account with same username does not exist
+    if (notExists) 
+    {
 
         outFile.open("username.txt", ios_base::app);
         outFile << username << endl;
@@ -449,37 +472,42 @@ void Register() {
     }
 }
 
+// log in with registered account
 bool LogIn() {
 
     bool login = false;
     cout << "\nEnter your username or '0' to exit: ";
     cin >> username;
-    if (username == "0") {
+    if (username == "0")
+    {
         return false;
     }
     cout << "Enter your password: ";
     cin >> password;
 
-    while (!login) {
+    while (!login) 
+    {
 
         int line = 0;
+        // open username.txt to read lines
         inFile.open("username.txt");
         while (!inFile.eof())
         {
-
             getline(inFile, usern);
             if (username != usern)
             {
                 line++;
             }
 
-            else {
-
-                inFile.close();
-                
+            else 
+            {
+                inFile.close();                
             }
         }
+
+        // open password.txt to check password
         inFile.open("password.txt");
+        // read until same line in username.txt
         for (int i = 0; i < line; i++)
         {
             getline(inFile, pw);
@@ -490,35 +518,31 @@ bool LogIn() {
             cout << "\nLog in successful!" << endl;
             inFile.close();
             User user(username, password);
+            // display main menu
             MainMenu(user);
             return true;
         }
-
-        else {
-
+        else 
+        {
             cout << "\nInvalid username or password!\n";
             inFile.close();
             return false;
-
         }
     }
-
     return false;
 }
 
 int main()
 {
-   
     do
     {
         cout << "---------------- C++ Forum -------------------" << endl;
         cout << "Choose one option: \n[1] Register \n[2] Log in" << endl << "Choice: ";
         cin >> choice;
 
-        // register 
-
+        // register
         if (choice == 1)
-        {      
+        {             
             Register();
             choice == 3;
         }
@@ -526,10 +550,8 @@ int main()
         // log in
         else if (choice == 2)
         {
-            // stop displaying menu if log in is successful
             if (LogIn())
-            {             
-                
+            {                  
             }
 
         }  

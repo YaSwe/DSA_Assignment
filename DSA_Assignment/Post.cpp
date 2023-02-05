@@ -1,3 +1,9 @@
+/*
+P02
+Chua Jie Ren - S10222145D
+THU YA SWE - S10222373G
+*/
+
 #include "Post.h"
 #include "PostList.h"
 
@@ -41,6 +47,7 @@ void Post::setText(string newText)
 	text = newText;
 }
 
+// returning of commentlist
 CommentList Post::getComment()
 {
 	return commentList;
@@ -51,6 +58,7 @@ void Post::setComment(CommentList newCommentList)
 	commentList = newCommentList;
 }
 
+// returning of postid
 int Post::getID() 
 {
 	if (postID != NULL) {
@@ -59,15 +67,18 @@ int Post::getID()
 	return -1;
 }
 
+// printing of post
 void Post::print() {
 	cout << topic << text << postID;
 }
 
+// returning of likes for specified post
 int Post::getLikes() 
 {
 	return likes;
 }
 
+// setting likes
 void Post::setLikes(int like) 
 {
 	likes = like;

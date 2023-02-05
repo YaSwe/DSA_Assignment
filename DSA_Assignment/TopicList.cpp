@@ -1,3 +1,9 @@
+/*
+P02
+Chua Jie Ren - S10222145D
+THU YA SWE - S10222373G
+*/
+
 #include "TopicList.h"	
 #include <fstream>
 #include <string>

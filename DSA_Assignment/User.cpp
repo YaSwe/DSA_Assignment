@@ -1,3 +1,9 @@
+/*
+P02
+Chua Jie Ren - S10222145D
+THU YA SWE - S10222373G
+*/
+
 #include "User.h"
 
 User::User(string name, string pass) 
@@ -24,8 +30,4 @@ void User::setPassword(string newPassword)
 string User::getPassword() 
 {
 	return password;
-}
-
-void valid(string username) {
-
 }
