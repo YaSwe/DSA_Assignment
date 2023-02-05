@@ -10,7 +10,8 @@
 
 using namespace std;
 static int current_id = 1;
-int option;
+string option;
+int choice;
 string username, password, fname, usern, pw;
 User user;
 ofstream outFile; // write file  
@@ -94,7 +95,7 @@ void ReadForum(User user)
                 stringstream ss;
                 ss << likes;
                 ss >> like;
-                cout << to_string(like);
+                //cout << to_string(like);
 
                 Post p = Post(topic, u, text, commentList, current_id++, like);
                 postList.add(p);
@@ -159,7 +160,7 @@ void ReadForum(User user)
                 stringstream ss;
                 ss << likes;
                 ss >> like;
-                cout << to_string(like);
+                //cout << to_string(like);
                 Post p = Post(topic, u, text, commentList, current_id++, like);
                 postList.add(p);
                 //cout << "work2";
@@ -247,9 +248,11 @@ void PrintTopicForum(User user)
     else
     {
         topicList.print();
-        cout << "\nSelect topic: ";
+        cout << "\nSelect topic or '0' to exit: ";
         cin >> topicInput;
-
+        if (topicInput == "0") {
+            return;
+        }
         cout << "\n---------------- " << topicInput << " Posts -------------------" << endl;
         postList.topicPrint(topicInput);
     }
@@ -264,8 +267,8 @@ void MyPosts(User user)
 		cout << "\nWelcome, " << user.getName() << endl;
 		cout << "---------------- My Posts -------------------" << endl;
 		postList.accPrint(user);
-		cout << postList.getLength();
-        cout << "\n[1] Delete a post \n[2] Edit a post" << endl << "Choice: ";
+		//cout << postList.getLength();
+        cout << "\nChoose an option:\n[1] Delete a post \n[2] Edit a post\n[0] Exit" << endl << "Your Choice: ";
         cin >> option;
 
         // delete a post
@@ -276,7 +279,7 @@ void MyPosts(User user)
             std::istringstream(wantedPost) >> wantedPost;
             postList.remove(wantedPost);
             
-            cout << postList.getLength();
+            //cout << postList.getLength();
 			postList.writeFile();
             postList.deleteAllNodes();
             ReadForum(user);
@@ -293,7 +296,7 @@ void MyPosts(User user)
             cout << "New post: ";
             cin.ignore();
             getline(cin, newText);
-            cout << newText;
+            //cout << newText;
             Post p = postList.get(wantedPost);
             p.print();
             p.setText(newText);
@@ -399,6 +402,7 @@ void MainMenu(User user)
         // log out
         else if (option == 6) 
         {
+            choice = -1;
             return;
         }
 
@@ -425,6 +429,7 @@ void Register() {
     if (!notExists) {
         cout << "There is already an existing account with that username. Please try again." << endl;
         cout << endl;
+        return;
     }
 
     inFile.close();
@@ -432,7 +437,7 @@ void Register() {
     // if account with username does not exist
     if (notExists) {
 
-        outFile.open(fname, ios_base::app);
+        outFile.open("username.txt", ios_base::app);
         outFile << username << endl;
         outFile.close();
 
@@ -455,12 +460,7 @@ bool LogIn() {
     cout << "Enter your password: ";
     cin >> password;
 
-
     while (!login) {
-        
-        if (username == "0") {
-            return false;
-        }
 
         int line = 0;
         inFile.open("username.txt");
@@ -479,32 +479,26 @@ bool LogIn() {
                 
             }
         }
-
         inFile.open("password.txt");
         for (int i = 0; i < line; i++)
         {
             getline(inFile, pw);
-            if (password == pw)
-            {
-                cout << "\nLog in successful!" << endl;
-                inFile.close();
-                User user(username, password);
-                MainMenu(user);
-                login = true;
-                return true;
-            }
+        }
 
-            else {
+        if (password == pw)
+        {
+            cout << "\nLog in successful!" << endl;
+            inFile.close();
+            User user(username, password);
+            MainMenu(user);
+            return true;
+        }
 
-                cout << "\nInvalid username or password! Try again\nEnter your username or '0' to exit: ";
-                cin >> username;
-                if (username == "0") {
-                    return false;
-                }
-                cout << "Enter your password: ";
-                cin >> password;
-                login = false;
-            }
+        else {
+
+            cout << "\nInvalid username or password!\n";
+            inFile.close();
+            return false;
 
         }
     }
@@ -514,29 +508,38 @@ bool LogIn() {
 
 int main()
 {
+   
     do
     {
         cout << "---------------- C++ Forum -------------------" << endl;
         cout << "Choose one option: \n[1] Register \n[2] Log in" << endl << "Choice: ";
-        cin >> option;
+        cin >> choice;
 
         // register 
-        if (option == 1) 
+
+        if (choice == 1)
         {      
-            Register();        
+            Register();
+            choice == 3;
         }
 
         // log in
-        else if (option == 2) 
+        else if (choice == 2)
         {
             // stop displaying menu if log in is successful
-            if (LogIn() == true)
+            if (LogIn())
             {             
-                option = 0;
+                
             }
 
-        }   
+        }  
+
+        else if(cin.fail())
+        {
+            cout << "Invalid input." << endl;
+            return -1;
+        }
     } 
-    while (option != 0);  
+    while (choice != 0);
 }
 
