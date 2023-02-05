@@ -125,7 +125,7 @@ string CommentList::CommentString() {
 	Node* temp = firstNode;
 
 	if (temp == NULL)
-		s = "";
+		s = " ";
 	else
 	{
 		while (temp != NULL)

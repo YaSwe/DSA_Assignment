@@ -1,14 +1,14 @@
 #include "Post.h"
 #include "PostList.h"
 
-Post::Post(string ptopic, User puser, string ptext, CommentList pcommentList, int id, int likes)
+Post::Post(string ptopic, User puser, string ptext, CommentList pcommentList, int id, int like)
 {
 	topic = ptopic;
 	user = puser;
 	text = ptext;
 	commentList = pcommentList;
 	postID = id;
-	likes = 0;
+	likes = like;
 }
 
 string Post::getTopic()
@@ -51,7 +51,8 @@ void Post::setComment(CommentList newCommentList)
 	commentList = newCommentList;
 }
 
-int Post::getID() {
+int Post::getID() 
+{
 	if (postID != NULL) {
 		return postID;
 	}
@@ -62,6 +63,12 @@ void Post::print() {
 	cout << topic << text << postID;
 }
 
-int Post::getLikes() {
+int Post::getLikes() 
+{
 	return likes;
+}
+
+void Post::setLikes(int like) 
+{
+	likes = like;
 }

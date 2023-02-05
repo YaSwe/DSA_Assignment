@@ -88,11 +88,14 @@ void ReadForum(User user)
             commentList.size = 0;
             User u(username, "123");
 
-            cout << comment;
 
             if (comment == " ") {
                 
-                std::istringstream(likes) >> like;
+                stringstream ss;
+                ss << likes;
+                ss >> like;
+                cout << to_string(like);
+
                 Post p = Post(topic, u, text, commentList, current_id++, like);
                 postList.add(p);
             }
@@ -153,10 +156,13 @@ void ReadForum(User user)
 
                 }
 
-                std::istringstream(likes) >> like;
+                stringstream ss;
+                ss << likes;
+                ss >> like;
+                cout << to_string(like);
                 Post p = Post(topic, u, text, commentList, current_id++, like);
                 postList.add(p);
-                cout << "work2";
+                //cout << "work2";
 
                 /*
                 while (std::getline(inputFile, line)) {
@@ -303,29 +309,50 @@ void MyPosts(User user)
     } while (option != 0);
 }
 
+
 void PrintAllPosts()
 {
     int index;
+    int option;
     string comment;
     do
     {
 		cout << "\n---------------- My Posts -------------------" << endl;
 		postList.printAll();
-		cout << "Which post to comment: ";
-		cin >> index;
-        if (index == 0) { break; }
-        Post p = postList.get(index);
-        cout << "Comment: ";
-        cin.ignore();
-        getline(cin, comment);
-        commentList = p.getComment();
-        commentList.add(comment);
-        index = 0;
+		cout << "\nChoose an option: \n[1] Comment on a post \n[2] Like a post \n[0] Exit \nYour Option: ";
+        cin >> option;
+        if (option == 0) { break; }
+        else if (option == 1) 
+        {
+            cout << "Which post do you want to comment on? ";
+            cin >> index;
+            Post p = postList.get(index);
+            cout << "Comment: ";
+            cin.ignore();
+            getline(cin, comment);
+            commentList = p.getComment();
+            commentList.add(comment);
+            p.setComment(commentList);
+            postList.replace(index, p);
+            postList.writeFile();
+            option = 0;
+        }
 
-        postList.writeFile();
+        else if (option == 2) 
+        {
+            cout << "Which post do you want to like?: ";
+            cin >> index;
+            Post p = postList.get(index);
+            p.setLikes(p.getLikes() + 1);
+            postList.replace(index, p);
+            postList.writeFile();
+            option = 0;
+        }    
 
-    } while (index != 0);
+    } while (option != 0);
 }
+
+
 
 void MainMenu(User user)
 {
@@ -420,47 +447,68 @@ void Register() {
 bool LogIn() {
 
     bool login = false;
-    cout << "\nEnter your username: ";
+    cout << "\nEnter your username or '0' to exit: ";
     cin >> username;
+    if (username == "0") {
+        return false;
+    }
     cout << "Enter your password: ";
     cin >> password;
 
-    int line = 0;
-    inFile.open("username.txt");
-    while (!inFile.eof())
-    {
 
-        getline(inFile, usern);
-        if (username != usern)
+    while (!login) {
+        
+        if (username == "0") {
+            return false;
+        }
+
+        int line = 0;
+        inFile.open("username.txt");
+        while (!inFile.eof())
         {
-            line++;
+
+            getline(inFile, usern);
+            if (username != usern)
+            {
+                line++;
+            }
+
+            else {
+
+                inFile.close();
+                
+            }
         }
 
-        else {
-            inFile.close();
-        }
-    }
-
-    inFile.open("password.txt");
-    for (int i = 0; i < line; i++)
-    {
-        getline(inFile, pw);
-        if (password == pw)
+        inFile.open("password.txt");
+        for (int i = 0; i < line; i++)
         {
-            cout << "\nLog in successful!" << endl;
-            inFile.close();
-            User user(username, password);
-            MainMenu(user);
-            login = true;
-            return true;
+            getline(inFile, pw);
+            if (password == pw)
+            {
+                cout << "\nLog in successful!" << endl;
+                inFile.close();
+                User user(username, password);
+                MainMenu(user);
+                login = true;
+                return true;
+            }
+
+            else {
+
+                cout << "\nInvalid username or password! Try again\nEnter your username or '0' to exit: ";
+                cin >> username;
+                if (username == "0") {
+                    return false;
+                }
+                cout << "Enter your password: ";
+                cin >> password;
+                login = false;
+            }
+
         }
-
     }
 
-    if (login == false) {
-
-        cout << "\nInvalid username or password! \nPlease try again!\n" << endl;
-    }
     return false;
 }
 
@@ -482,10 +530,11 @@ int main()
         else if (option == 2) 
         {
             // stop displaying menu if log in is successful
-            if (LogIn() == true) 
+            if (LogIn() == true)
             {             
-                option = 0; 
-            }       
+                option = 0;
+            }
+
         }   
     } 
     while (option != 0);  

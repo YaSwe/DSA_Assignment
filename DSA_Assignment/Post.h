@@ -40,6 +40,8 @@ public:
 
 	int getLikes();
 
+	void setLikes(int like);
+
 	void setComment(CommentList newCommentList);
 
 };
