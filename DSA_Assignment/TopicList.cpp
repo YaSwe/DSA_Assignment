@@ -138,6 +138,19 @@ void TopicList::print()
 	}
 }
 
+void TopicList::deleteAllNodes()
+{
+	Node* current = firstNode;
+	Node* next;
+
+	while (current != NULL) {
+		next = current->next;
+		delete current;
+		current = next;
+		size--;
+	}
+	firstNode = NULL;
+}
 
 
 

@@ -38,5 +38,8 @@ public:
 
 	void print();
 
+	void deleteAllNodes();
+
+
 };
 

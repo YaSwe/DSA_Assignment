@@ -1,20 +1,25 @@
 yaswe
 Lists
 How do I make a list?
-comment1,test,test,test,
+a list is,
 0
 jieren
 File handling
-trunc bad
-comment2,lalala,
+What is trunc?
+trunc is,
 0
 yaswe
 Array
-i dont know 
-test,yo,0,test,
+How do you make an array? 
+test,yo,
 0
 test
 testing
 blah ya
+ 
+0
+a
+Testing
+How do I debug?
  
 0

@@ -96,7 +96,6 @@ void ReadForum(User user)
                 stringstream ss;
                 ss << likes;
                 ss >> like;
-                cout << to_string(like);
                 // current_id++ so that it is assigned automatically
                 Post p = Post(topic, u, text, commentList, current_id++, like);
                 postList.add(p);
@@ -409,18 +408,26 @@ void MainMenu(User user)
         // view posts by selected topic
         else if (option == 4)
         {          
+            topicList.deleteAllNodes();
+            postList.deleteAllNodes();
+            ReadForum(user);
             PrintTopicForum(user);
         }
         // view own posts
         else if (option == 5)
-        {        
+        {   
             MyPosts(user);
         }
         // log out
         else if (option == 6) 
         {
-            choice = -1;
-            return;
+            option = -1;
+            
+        }
+        else if (cin.fail())
+        {
+            cout << "Invalid input. Try again: ";
+            cin >> option;
         }
 
     } while (option != 0);
